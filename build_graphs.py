@@ -30,7 +30,7 @@ end = '-1s'
 #CHOOSE FILE.RRD TO BUILD GRAPHS WITH 
 path = os.getcwd() #path of current working directory
 cont = os.listdir(path) #content of current working directory
-file_ext = '.rrd' #estensione dei file di mio interesse
+file_ext = '.rrd' 
 lista = [] #list that contains all file.rrd in current working directory
 
 print('\nThe current directory contains the following files:')
