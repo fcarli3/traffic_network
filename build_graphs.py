@@ -27,11 +27,11 @@ else:
 
 end = '-1s'
 
-#FACCIO SCEGLIERE ALL'UTENTE QUALI GRAFICI OTTENERE IN BASE AI DB PRESENTI NELLA DIRECTORY CORRENTE
-path = os.getcwd() #path della directory di lavoro corrente
-cont = os.listdir(path) #lista di file e sottodirectory all'interno
+#CHOOSE FILE.RRD TO BUILD GRAPHS WITH 
+path = os.getcwd() #path of current working directory
+cont = os.listdir(path) #content of current working directory
 file_ext = '.rrd' #estensione dei file di mio interesse
-lista = [] #lista che uso per salvare i file.rrd
+lista = [] #list that contains all file.rrd in current working directory
 
 print('\nThe current directory contains the following files:')
 
