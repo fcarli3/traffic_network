@@ -45,13 +45,13 @@ if((int(interface) < 1) or (int(interface) > num_if)):
 	sys.exit()
 	
 name = session.get(f'ifName.{interface}').value
-new_file = name + '.rrd' #nome del file rrd relativo all'interfaccia scelta
+new_file = name + '.rrd' #name of file.rrd 
 
 ################################################################################################################################
 
-#CREO IL FILE RRD, SPECIFICANDO IL TIPO DI DATI DA MEMORIZZARE E DUE ARCHIVI RRA
-#IL PRIMO ARCHIVIO MEMORIZZA I DATI RAW RELATIVI ALL'ULTIMA ORA, QUINDI DEVO AVERE 360 CELLE (3600/10)
-#IL SECONDO ARCHIVIO MEMORIZZA LA MEDIA AL MINUTO PER UNA SETTIMANA, QUINDI DEVO AVERE 6 (60/10) DATI RAW PER FARE LA MEDIA E 10.080 CELLE 
+#CREATING FILE.RRD AND TWO RRAs
+#FIRST RRA KEEPS LAST-HOUR RAW DATA, SO IT NEEDS 360 CELLS (3600/10)
+#SECOND RRA KEEPS AVERAGE PER MINUTE FOR A WEEK, SO IT NEEDS 6 (60/10) RAW DATA TO DO THE AVERAGE AND 10.080 CELLS 
 
 filename = new_file 
 step = 10
@@ -60,14 +60,14 @@ min_val = 0
 max_val = 'U'
 
 tempo1 = 3600
-celle_rra1 = int(tempo1/step) #360 celle relative all'ultima ora
+celle_rra1 = int(tempo1/step) #360 last-hour cells
 
 tempo2 = 60 
 valori = int(tempo2/step) 
-celle_rra2 = 7*24*60 #media al minuto per una settimana, 10.080 celle relative all'ultima settimana
+celle_rra2 = 7*24*60 #average per minute for a week, 10.080 cells
 
 
-#Controllo se il file rrd per l'interfaccia scelta esiste già oppure va creato
+#Check if file.rrd has been already created
 if(os.path.isfile(f'{filename}') == False): 
 	print(f'\nCreating new file {filename}\n')
 	db = rrdtool.create(filename,'--step',str(step),f'DS:in:COUNTER:{attesa_max}:{min_val}:{max_val}',f'DS:out:COUNTER:{attesa_max}:{min_val}:{max_val}',f'RRA:AVERAGE:0.5:1:{celle_rra1}',f'RRA:AVERAGE:0.5:1:{celle_rra1}',f'RRA:AVERAGE:0.5:{valori}:{celle_rra2}',f'RRA:AVERAGE:0.5:{valori}:{celle_rra2}')
@@ -89,19 +89,19 @@ try:
 		
 		db = rrdtool.update(filename,'N:%s:%s' %(str(bit_input),str(bit_out)))
 
-		#Mbits in input sull'interfaccia scelta negli ultimi 10 secondi 
+		#Inbound traffics (in Mbit) during last 10 seconds 
 		diff_in = abs(prec_in - bit_input)
 		bps_in = int(diff_in/step)
 		mbps_in = round(bps_in/(2**20),3)
 		prec_in = bit_input
 
-		#Mbits in output sull'interfaccia scelta negli ultimi 10 secondi 
+		#Outbound traffics (in Mbit) during last 10 seconds 
 		diff_out = abs(prec_out - bit_out)
 		bps_out = int(diff_out/step)
 		mbps_out = round(bps_out/(2**20),3)
 		prec_out = bit_out
 		
-		#Utilizzo della banda dell'interfaccia scelta (in Mbps) negli ultimi 10 secondi
+		#Bandwidth usage (in Mbps) during last 10 seconds
 		tmp = int((diff_in + diff_out)/step)
 		bandwidth = round(tmp/(2**20),3)
 
